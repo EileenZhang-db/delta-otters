@@ -53,9 +53,8 @@ export async function streamAgentTurn(args: {
   req: Request;
   res: Response;
   userEmail: string;
-  /** MAS endpoint name. Replace with `genieSpaceId` if your demo uses
-   * Genie — see refundops.ts AgentContext for the matching change. */
-  masEndpointName: string;
+  /** Genie space ID the `ask_data` tool talks to. */
+  genieSpaceId: string;
   databricksHost: string;
   model: string;
   messages: Msg[];
@@ -116,7 +115,7 @@ export async function streamAgentTurn(args: {
       db: args.db,
       userEmail: args.userEmail,
       req: args.req,
-      masEndpointName: args.masEndpointName,
+      genieSpaceId: args.genieSpaceId,
       databricksHost: args.databricksHost,
       model: args.model,
       modelError,

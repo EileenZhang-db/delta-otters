@@ -58,7 +58,7 @@ import type { AppDb } from '../db/index.js';
 // update the AgentContext field below (masEndpointName → genieSpaceId).
 // If your demo has BOTH, register both tools and tell the model in the
 // agent instructions when to prefer each.
-import { askMasTool } from './tools/mas.js';
+import { askGenieTool } from './tools/genie.js';
 export type { ToolProgressEvent } from './tools/types.js';
 
 /** Captured detail of the last failing call to the model serving endpoint.
@@ -79,12 +79,9 @@ export type AgentContext = {
   db: AppDb;
   userEmail: string;
   req: Request;
-  /** MAS serving-endpoint name the `ask_data` tool talks to. Set in
-   * `config/app.json` as `masEndpointName`. The template demo uses MAS;
-   * if your demo uses Genie instead, replace this field with
-   * `genieSpaceId: string` and swap `askMasTool` → `askGenieTool` in
-   * makeTools below. See server/agent/tools/{mas,genie}.ts. */
-  masEndpointName: string;
+  /** Genie space ID the `ask_data` tool talks to. Set in
+   * `config/app.json` as `genieSpaceId`. */
+  genieSpaceId: string;
   databricksHost: string;
   model: string;
   /** Called by long-running tools to surface progress to the UI. */
@@ -218,21 +215,15 @@ function makeTools(ctx: AgentContext) {
       ),
   });
 
-  // The data-backend tool. The template demo uses a MAS endpoint;
-  // swap to `askGenieTool(ctx, ctx.genieSpaceId)` if your demo only has
-  // a Genie space (and update AgentContext + config/app.json to match).
-  // For a demo with both, register both tools — the model picks based
-  // on the descriptions in tools/{mas,genie}.ts.
-  // Skip registration entirely if no endpoint is configured — otherwise
-  // the tool fires `POST /serving-endpoints//invocations` (note the
-  // double slash) and returns a confusing 404 to the model. Boot-time
-  // warning in server.ts already tells the operator to fix the config.
+  // The data-backend tool. This demo uses a Genie space for open-ended
+  // "why" questions backed by SQL.
+  // Skip registration entirely if no space is configured.
   // Typed as Tool[] so the heterogeneous tools (different param schemas) and
   // the optional data-backend tool can coexist — otherwise TS infers a narrow
   // union from the literal array and rejects the push below.
   const tools: Tool[] = [findAtriskCustomer, rankNextBestActions, searchProducts, executeNbaAction];
-  if (ctx.masEndpointName) {
-    tools.push(askMasTool(ctx, ctx.masEndpointName));
+  if (ctx.genieSpaceId) {
+    tools.push(askGenieTool(ctx, ctx.genieSpaceId));
   }
   return tools;
 }

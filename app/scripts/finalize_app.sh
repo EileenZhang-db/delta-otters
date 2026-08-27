@@ -48,7 +48,7 @@ cd "$BUNDLE_DIR"
 # here. The name matches databricks.yml's job name with the dev-mode prefix.
 # ⚠️ When forking this template for a new demo, change "LuxeBeauty Setup" to
 #    match the renamed job name in databricks.yml (resources.jobs.<key>.name).
-SETUP_JOB_NAME_MATCH="LuxeBeauty Setup"
+SETUP_JOB_NAME_MATCH="Meridian Bank"
 if [[ -z "$JOB_ID" ]]; then
     JOB_ID=$(databricks jobs list "${PROFILE_FLAG[@]}" -o json 2>/dev/null \
         | python3 -c "
