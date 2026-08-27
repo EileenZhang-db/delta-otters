@@ -10,10 +10,9 @@ import type { ThinkingEntry } from '../db/schema.js';
 import { sseError } from './sse.js';
 
 type ChatConfig = {
-  /** MAS endpoint name. Passed through to `streamAgentTurn` and from
-   * there into the AgentContext used by relationshipdesk.ts. Replace with
-   * `genieSpaceId` if your demo uses Genie. */
-  masEndpointName: string;
+  /** Genie space ID. Passed through to `streamAgentTurn` and from
+   * there into the AgentContext used by relationshipdesk.ts. */
+  genieSpaceId: string;
   agentModel?: string;
 };
 
@@ -178,7 +177,7 @@ export async function handleChatStream(args: {
       req,
       res,
       userEmail,
-      masEndpointName: config.masEndpointName,
+      genieSpaceId: config.genieSpaceId,
       databricksHost: host,
       // Foundation Model endpoint name. Needs the OpenAI Responses API
       // (refundops.ts `setOpenAIAPI('responses')`). `databricks-gpt-5-4` is the

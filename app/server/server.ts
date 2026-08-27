@@ -474,18 +474,15 @@ await createApp({
     appConfig,
     getAgentExperimentId: () => agentExperimentId,
   });
-  // The template demo registers `ask_mas`. If your demo uses Genie
-  // instead, swap masEndpointName here for genieSpaceId and update
-  // refundops.ts AgentContext + makeTools() accordingly.
-  if (!appConfig.masEndpointName) {
+  if (!appConfig.genieSpaceId) {
     console.warn(
-      '[boot] config.masEndpointName is empty — the agent won\'t have an ask_mas tool. Set it in config/app.json, or wire ask_genie if your demo uses Genie.',
+      '[boot] config.genieSpaceId is empty — the agent won\'t have an ask_data tool. Set GENIE_SPACE_ID in .env.',
     );
   }
   registerChatRoutes(app, {
     db,
     appConfig: {
-      masEndpointName: appConfig.masEndpointName ?? '',
+      genieSpaceId: appConfig.genieSpaceId ?? '',
       agentModel: appConfig.agentModel,
     },
   });
